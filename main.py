@@ -12,8 +12,24 @@ from fastapi import Request
 
 from admin.admin import get_competitions, has_access_for_competition, provide_admin_access, get_registered_users_by_sport_name
 
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 SECRET_KEY = "138r3h788dhhd9yer8hd38h3hhd8ih3"
 ALGORITHM = "HS256"
