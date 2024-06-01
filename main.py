@@ -16,12 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,7 +28,7 @@ app.add_middleware(
 
 SECRET_KEY = "138r3h788dhhd9yer8hd38h3hhd8ih3"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 1800
+ACCESS_TOKEN_EXPIRE_MINUTES = 180000
 
 
 class Token(BaseModel):
