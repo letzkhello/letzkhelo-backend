@@ -142,7 +142,7 @@ async def provide_admin_access_api(request: admin_access_class, current_user: Us
     res = await provide_admin_access(request)
     return res
 
-@app.get("/admin/get_registered_users_by_sport_name")
+@app.post("/admin/get_registered_users_by_sport_name")
 async def get_registered_users_by_sport_name_api(request: registered_users_by_sport_name_class, current_user: User = Depends(get_current_active_user)):
     res = await get_registered_users_by_sport_name(request)
     return res
