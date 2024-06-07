@@ -11,9 +11,23 @@ from fastapi import Request
 
 from admin.admin import get_competitions, has_access_for_competition, provide_admin_access, get_registered_users_by_sport_name
 from referal.referal import change_referral_code, apply_referral, redeem_coins, check_referral_code
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 SECRET_KEY = "138r3h788dhhd9yer8hd38h3hhd8ih3"
 ALGORITHM = "HS256"
