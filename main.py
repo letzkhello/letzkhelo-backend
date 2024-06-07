@@ -175,5 +175,5 @@ async def check_referral_code_api(request: ReferralCheckRequest):
     res = await check_referral_code(request)
     return res
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     run(app, host="0.0.0.0", port=8000)
