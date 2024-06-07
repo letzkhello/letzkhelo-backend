@@ -31,7 +31,7 @@ app.add_middleware(
 
 SECRET_KEY = "138r3h788dhhd9yer8hd38h3hhd8ih3"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 1800
+ACCESS_TOKEN_EXPIRE_MINUTES = 18000
 
 
 class Token(BaseModel):
@@ -163,7 +163,7 @@ async def provide_admin_access_api(request: admin_access_class, current_user: Us
     res = await provide_admin_access(request)
     return res
 
-@app.get("/admin/get_registered_users_by_sport_name")
+@app.post("/admin/get_registered_users_by_sport_name")
 async def get_registered_users_by_sport_name_api(request: registered_users_by_sport_name_class, current_user: User = Depends(get_current_active_user)):
     res = await get_registered_users_by_sport_name(request)
     return res
