@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 from uvicorn import run
 
@@ -7,28 +6,18 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from fastapi import Request
 
 from admin.admin import get_competitions, has_access_for_competition, provide_admin_access, get_registered_users_by_sport_name
+from referal.referal import change_referral_code, apply_referral, redeem_coins, check_referral_code
 
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origins = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 SECRET_KEY = "138r3h788dhhd9yer8hd38h3hhd8ih3"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 180000
+ACCESS_TOKEN_EXPIRE_MINUTES = 1800
 
 
 class Token(BaseModel):
@@ -59,6 +48,24 @@ class registered_users_by_sport_name_class(BaseModel):
     sportName: str | None = None
     email: str | None = None
 
+class ChangeReferralCodeRequest(BaseModel):
+    email: EmailStr
+    new_name: str
+
+class ApplyReferralRequest(BaseModel):
+    user_email: EmailStr
+    referral_code: str
+    competition_fees: float
+    sport_referred_to: str
+
+# Pydantic model for the request body
+class RedeemCoinsRequest(BaseModel):
+    email: EmailStr
+    amount: float
+    sport_redeemed_to: str
+
+class ReferralCheckRequest(BaseModel):
+    referral_code: str
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -142,10 +149,31 @@ async def provide_admin_access_api(request: admin_access_class, current_user: Us
     res = await provide_admin_access(request)
     return res
 
-@app.post("/admin/get_registered_users_by_sport_name")
+@app.get("/admin/get_registered_users_by_sport_name")
 async def get_registered_users_by_sport_name_api(request: registered_users_by_sport_name_class, current_user: User = Depends(get_current_active_user)):
     res = await get_registered_users_by_sport_name(request)
     return res
 
-if __name__ == "__main__":
+# API to change referral code
+@app.post("/change_referral_code")
+async def change_referral_code_api(request: ChangeReferralCodeRequest, current_user: User = Depends(get_current_active_user)):
+    res = await change_referral_code(request)
+    return res
+
+@app.post("/apply_referral")
+async def apply_referral_api(request: ApplyReferralRequest):
+    res = await apply_referral(request)
+    return res
+
+@app.post("/redeem_coins")
+async def redeem_coins_api(request: RedeemCoinsRequest):
+    res = await redeem_coins(request)
+    return res
+
+@app.post("/check_referral_code")
+async def check_referral_code_api(request: ReferralCheckRequest):
+    res = await check_referral_code(request)
+    return res
+
+if _name_ == "_main_":
     run(app, host="0.0.0.0", port=8000)
